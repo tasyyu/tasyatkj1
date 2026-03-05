@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>weārsua</title>
+
+<style>
+:root {
+    --gradasi: linear-gradient(135deg,#ff6ec4,#6ec6ff);
+}
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f5f5f5;
+}
+
+header{
+    background:var(--gradasi);
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.cart{
+    position:fixed;
+    top:15px;
+    right:20px;
+    background:white;
+    padding:8px 15px;
+    border-radius:20px;
+    font-weight:bold;
+}
+
+.total{
+    position:fixed;
+    top:60px;
+    right:20px;
+    background:white;
+    padding:8px 15px;
+    border-radius:20px;
+    font-weight:bold;
+}
+
+.checkout{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:var(--gradasi);
+    color:white;
+    padding:12px 18px;
+    border-radius:25px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.kategori{
+    text-align:center;
+    margin-top:20px;
+    font-weight:bold;
+    font-size:20px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    gap:15px;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    overflow:hidden;
+}
+
+.card img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+}
+
+.card-body{
+    padding:10px;
+}
+
+.harga{
+    color:#ff6ec4;
+    font-weight:bold;
+}
+
+button{
+    background:var(--gradasi);
+    color:white;
+    border:none;
+    padding:8px;
+    width:100%;
+    border-radius:8px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>weārsua</h1>
+</header>
+
+<div class="cart">
+🛒 <span id="cartCount">0</span>
+</div>
+
+<div class="total">
+Total: Rp <span id="totalHarga">0</span>
+</div>
+
+<div class="kategori">Kategori: Baju</div>
+
+<div class="grid">
+
+<div class="card">
+<img src="jaketairsmuniqlo.jpg">
+<div class="card-body">
+<div>Jaket Airism Uniqlo</div>
+<div class="harga">Rp 50000</div>
+<button onclick="beli('Jaket Airism Uniqlo',50000)">Beli</button>
+</div>
+</div>
+
+<div class="card">
+<img src="bajuadidas.jpg">
+<div class="card-body">
+<div>Baju Adidas</div>
+<div class="harga">Rp 50000</div>
+<button onclick="beli('Baju Adidas',50000)">Beli</button>
+</div>
+</div>
+
+</div>
+
+<div class="kategori">Kategori: Celana Panjang</div>
+
+<div class="grid">
+
+<div class="card">
+<img src="celanapanjanguniqlo.jpg">
+<div class="card-body">
+<div>Celana Panjang Uniqlo</div>
+<div class="harga">Rp 50000</div>
+<button onclick="beli('Celana Panjang Uniqlo',50000)">Beli</button>
+</div>
+</div>
+
+</div>
+
+<div class="kategori">Kategori: Celana Pendek</div>
+
+<div class="grid">
+
+<div class="card">
+<img src="celanapendekadidas.jpg">
+<div class="card-body">
+<div>Celana Pendek Adidas</div>
+<div class="harga">Rp 50000</div>
+<button onclick="beli('Celana Pendek Adidas',50000)">Beli</button>
+</div>
+</div>
+
+</div>
+
+<div class="checkout" onclick="checkoutWA()">
+Checkout via WhatsApp
+</div>
+
+<script>
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+updateTampilan();
+
+function beli(nama,harga){
+cart.push({nama,harga});
+localStorage.setItem("cart",JSON.stringify(cart));
+updateTampilan();
+alert("Produk ditambahkan!");
+}
+
+function updateTampilan(){
+document.getElementById("cartCount").innerText=cart.length;
+
+let total=0;
+cart.forEach(item=>total+=item.harga);
+
+document.getElementById("totalHarga").innerText=total;
+}
+
+function checkoutWA(){
+
+if(cart.length===0){
+alert("Keranjang kosong!");
+return;
+}
+
+let pesan="Halo saya ingin memesan:%0A";
+let total=0;
+
+cart.forEach((item,index)=>{
+pesan+=(index+1)+". "+item.nama+" - Rp "+item.harga+"%0A";
+total+=item.harga;
+});
+
+pesan+="%0ATotal: Rp "+total;
+
+let nomorWA="6289515460823";
+
+let url="https://wa.me/"+089515460823+"?text="+pesan;
+
+window.open(url,"_blank");
+}
+
+</script>
+
+</body>
+</html>
