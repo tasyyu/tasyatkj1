@@ -383,61 +383,51 @@
 
     <script>
         // Keranjang belanja
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        // Update tampilan
-        function updateDisplay() {
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            document.getElementById('cartCount').textContent = totalItems;
-            document.getElementById('totalHarga').textContent = formatPrice(totalPrice);
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-        }
+updateTampilan();
 
-        // Format harga
-        function formatPrice(price) {
-            return new Intl.NumberFormat('id-ID').format(price);
-        }
+function beli(nama,harga){
+  cart.push({nama, harga});
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateTampilan();
+  alert("Produk ditambahkan!");
+}
 
-        // Tambah ke keranjang
-        function addToCart(name, price) {
-            const existing = cart.find(item => item.name === name);
-            if (existing) {
-                existing.quantity++;
-            } else {
-                cart.push({ name: name, price: price, quantity: 1 });
-            }
-            updateDisplay();
-            alert('Produk ditambahkan!');
-        }
+function updateTampilan(){
+  document.getElementById("cartCount").innerText = cart.length;
+  
+  let total = 0;
+  cart.forEach(item => {
+    if(item.harga && !isNaN(item.harga)) {
+      total += item.harga;
+    }
+  });
+  
+  document.getElementById("totalHarga").innerText = total.toLocaleString('id-ID');
+}
 
-        // Checkout WhatsApp
-        function checkoutWA() {
-            if (cart.length === 0) {
-                alert('Keranjang kosong!');
-                return;
-            }
-
-            let pesan = 'Halo saya ingin memesan:%0A';
-            let index = 1;
-            let total = 0;
-
-            cart.forEach(item => {
-                for (let i = 0; i < item.quantity; i++) {
-                    pesan += index + '. ' + item.name + ' - Rp ' + formatPrice(item.price) + '%0A';
-                    index++;
-                    total += item.price;
-                }
-            });
-
-            pesan += '%0ATotal: Rp ' + formatPrice(total);
-
-            // GANTI NOMOR WHATSAPP DI SINI
-            const nomorWA = '6289515460823';
-            
-            window.open('https://wa.me/' + nomorWA + '?text=' + pesan, '_blank');
+function checkoutWA(){
+  if(cart.length === 0){
+    alert("Keranjang kosong!");
+    return;
+  }
+  
+  let pesan = "Halo saya ingin memesan:%0A";
+  let total = 0;
+  
+  cart.forEach((item, index) => {
+    pesan += (index + 1) + ". " + item.nama + " - Rp " + item.harga + "%0A";
+    total += item.harga;
+  });
+  
+  pesan += "%0ATotal: Rp " + total;
+  
+  let nomorWA = "6289515460823"; // Ubah ke string!
+  
+  let url = "https://wa.me/" + nomorWA + "?text=" + pesan;
+  
+  window.open(url, "_blank");
         }
 
         // Load saat halaman dibuka
