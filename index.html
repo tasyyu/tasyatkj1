@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝓦𝓔𝓐𝓡𝓢𝓤𝓐</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(to right, #f472b6, #60a5fa);
+            color: white;
+            padding: 24px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Floating emojis */
+        .emoji-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.5);
+            }
+            20%, 80% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Cart Counter */
+        .cart-counter {
+            position: fixed;
+            top: 16px;
+            right: 20px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cart-counter svg {
+            color: #ec4899;
+        }
+
+        /* Total */
+        .total-display {
+            position: fixed;
+            top: 64px;
+            right: 20px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+        }
+
+        /* Category Title */
+        .category-title {
+            text-align: center;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: #1f2937;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 640px) {
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .product-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        /* Product Card */
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .product-image-wrapper {
+            padding: 8px;
+            background: linear-gradient(to bottom right, #a855f7, #3b82f6);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 176px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-info {
+            padding: 12px;
+            text-align: center;
+        }
+
+        .product-name {
+            font-weight: 500;
+            color: #1f2937;
+            font-size: 0.875rem;
+            margin-bottom: 4px;
+        }
+
+        .product-price {
+            color: #ec4899;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .btn-buy {
+            width: 100%;
+            background: linear-gradient(to right, #f472b6, #60a5fa);
+            color: white;
+            border: none;
+            padding: 10px 0;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-buy:hover {
+            background: linear-gradient(to right, #ec4899, #3b82f6);
+        }
+
+        /* Checkout Button */
+        .btn-checkout {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(to right, #f472b6, #60a5fa);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .btn-checkout:hover {
+            background: linear-gradient(to right, #ec4899, #3b82f6);
+        }
+
+        .content {
+            padding-bottom: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="emoji-container">
+            <span class="floating-emoji" style="left: 15%; animation-delay: 0s;">💌</span>
+            <span class="floating-emoji" style="left: 30%; animation-delay: 0.8s;">🧁</span>
+            <span class="floating-emoji" style="left: 50%; animation-delay: 1.6s;">💌</span>
+            <span class="floating-emoji" style="left: 70%; animation-delay: 2.4s;">🧁</span>
+            <span class="floating-emoji" style="left: 85%; animation-delay: 3.2s;">💌</span>
+        </div>
+        <h1>𝓦𝓔𝓐𝓡𝓢𝓤𝓐</h1>
+    </header>
+
+    <!-- Cart Counter -->
+    <div class="cart-counter">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="m1 1 4 4h16l-2 9H6"/>
+        </svg>
+        <span id="cartCount">0</span>
+    </div>
+
+    <!-- Total -->
+    <div class="total-display">
+        Total: Rp <span id="totalHarga">0</span>
+    </div>
+
+    <div class="content">
+        <!-- Lipstik -->
+        <div class="category-title">Lipstik</div>
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=300&h=300&fit=crop" alt="Lipstik Matte Red">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Lipstik Matte Red</div>
+                    <div class="product-price">Rp 75.000</div>
+                    <button class="btn-buy" onclick="addToCart('Lipstik Matte Red', 75000)">Beli</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=300&h=300&fit=crop" alt="Lipstik Nude Pink">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Lipstik Nude Pink</div>
+                    <div class="product-price">Rp 65.000</div>
+                    <button class="btn-buy" onclick="addToCart('Lipstik Nude Pink', 65000)">Beli</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1619451334792-150fd785ee74?w=300&h=300&fit=crop" alt="Lip Gloss Shiny">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Lip Gloss Shiny</div>
+                    <div class="product-price">Rp 55.000</div>
+                    <button class="btn-buy" onclick="addToCart('Lip Gloss Shiny', 55000)">Beli</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Foundation & Cushion -->
+        <div class="category-title">Foundation & Cushion</div>
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1631214524020-7e18db9a8f92?w=300&h=300&fit=crop" alt="Foundation Dewy">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Foundation Dewy</div>
+                    <div class="product-price">Rp 150.000</div>
+                    <button class="btn-buy" onclick="addToCart('Foundation Dewy', 150000)">Beli</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=300&h=300&fit=crop" alt="Cushion Natural">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Cushion Natural</div>
+                    <div class="product-price">Rp 120.000</div>
+                    <button class="btn-buy" onclick="addToCart('Cushion Natural', 120000)">Beli</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Eyeshadow & Mascara -->
+        <div class="category-title">Eyeshadow & Mascara</div>
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300&h=300&fit=crop" alt="Eyeshadow Palette">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Eyeshadow Palette</div>
+                    <div class="product-price">Rp 180.000</div>
+                    <button class="btn-buy" onclick="addToCart('Eyeshadow Palette', 180000)">Beli</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1631214503851-2bd786381b18?w=300&h=300&fit=crop" alt="Mascara Waterproof">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Mascara Waterproof</div>
+                    <div class="product-price">Rp 85.000</div>
+                    <button class="btn-buy" onclick="addToCart('Mascara Waterproof', 85000)">Beli</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1617220379175-68eb0bde3a42?w=300&h=300&fit=crop" alt="Eyeliner Pen">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Eyeliner Pen</div>
+                    <div class="product-price">Rp 45.000</div>
+                    <button class="btn-buy" onclick="addToCart('Eyeliner Pen', 45000)">Beli</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blush & Highlighter -->
+        <div class="category-title">Blush & Highlighter</div>
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=300&h=300&fit=crop" alt="Blush On Pink">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Blush On Pink</div>
+                    <div class="product-price">Rp 95.000</div>
+                    <button class="btn-buy" onclick="addToCart('Blush On Pink', 95000)">Beli</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=300&h=300&fit=crop" alt="Highlighter Glow">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Highlighter Glow</div>
+                    <div class="product-price">Rp 110.000</div>
+                    <button class="btn-buy" onclick="addToCart('Highlighter Glow', 110000)">Beli</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Button -->
+    <button class="btn-checkout" onclick="checkoutWA()">Checkout via WhatsApp</button>
+
+    <script>
+        // Keranjang belanja
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Update tampilan
+        function updateDisplay() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            document.getElementById('cartCount').textContent = totalItems;
+            document.getElementById('totalHarga').textContent = formatPrice(totalPrice);
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        // Format harga
+        function formatPrice(price) {
+            return new Intl.NumberFormat('id-ID').format(price);
+        }
+
+        // Tambah ke keranjang
+        function addToCart(name, price) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ name: name, price: price, quantity: 1 });
+            }
+            updateDisplay();
+            alert('Produk ditambahkan!');
+        }
+
+        // Checkout WhatsApp
+        function checkoutWA() {
+            if (cart.length === 0) {
+                alert('Keranjang kosong!');
+                return;
+            }
+
+            let pesan = 'Halo saya ingin memesan:%0A';
+            let index = 1;
+            let total = 0;
+
+            cart.forEach(item => {
+                for (let i = 0; i < item.quantity; i++) {
+                    pesan += index + '. ' + item.name + ' - Rp ' + formatPrice(item.price) + '%0A';
+                    index++;
+                    total += item.price;
+                }
+            });
+
+            pesan += '%0ATotal: Rp ' + formatPrice(total);
+
+            // GANTI NOMOR WHATSAPP DI SINI
+            const nomorWA = '6281913820010';
+            
+            window.open('https://wa.me/' + nomorWA + '?text=' + pesan, '_blank');
+        }
+
+        // Load saat halaman dibuka
+        updateDisplay();
+    </script>
+</body>
+</html>
+
